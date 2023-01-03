@@ -11,11 +11,5 @@
 
     <artifactId>order-domain-core</artifactId>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.foodie</groupId>
-            <artifactId>common-domain</artifactId>
-        </dependency>
-    </dependencies>
 
 </project>

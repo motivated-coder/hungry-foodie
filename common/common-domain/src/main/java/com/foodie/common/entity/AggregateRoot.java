@@ -1,4 +1,4 @@
 package com.foodie.common.entity;
 
-public class AggregateRoot extends BaseEntity{
+public class AggregateRoot<ID> extends BaseEntity<ID>{
 }

@@ -10,7 +10,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @Builder
-public class OrderItem {
+public class Item {
     private final UUID productId;
     private final Integer quantity;
     private final BigDecimal price;

@@ -15,6 +15,6 @@ public class OrderDto {
     private final UUID customerId;
     private final UUID restaurantId;
     private final BigDecimal price;
-    private final List<OrderItem> items;
+    private final List<Item> items;
     private final OrderAddress address;
 }
