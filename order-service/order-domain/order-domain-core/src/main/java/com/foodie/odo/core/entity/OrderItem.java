@@ -3,15 +3,16 @@ package com.foodie.odo.core.entity;
 import com.foodie.common.entity.BaseEntity;
 import com.foodie.common.entity.Product;
 import com.foodie.common.valueobject.Money;
+import com.foodie.odo.core.exception.OrderDomainException;
 import com.foodie.odo.core.valueobject.OrderId;
 import com.foodie.odo.core.valueobject.OrderItemId;
 
 public class OrderItem extends BaseEntity<OrderItemId> {
     OrderId orderId;
-    Product product;
-    Integer quantity;
-    Money price;
-    Money subtotal;
+    private final Product product;
+    private final Integer quantity;
+    private final Money price;
+    private final Money subtotal;
 
     private OrderItem(Builder builder) {
         super.setId(builder.id);
@@ -69,5 +70,34 @@ public class OrderItem extends BaseEntity<OrderItemId> {
         public OrderItem build() {
             return new OrderItem(this);
         }
+    }
+    protected void validateOrderItemPrice() {
+        if(!this.price.isGreaterThanZero()){
+            throw new OrderDomainException("Order Items price cannot be null or less than 0");
+        }
+    }
+
+    public OrderId getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(OrderId orderId) {
+        this.orderId = orderId;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Money getPrice() {
+        return price;
+    }
+
+    public Money getSubtotal() {
+        return subtotal;
     }
 }

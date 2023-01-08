@@ -5,6 +5,7 @@ import com.foodie.common.enums.OrderStatus;
 import com.foodie.common.valueobject.CustomerId;
 import com.foodie.common.valueobject.Money;
 import com.foodie.common.valueobject.RestaurantId;
+import com.foodie.odo.core.exception.OrderDomainException;
 import com.foodie.odo.core.valueobject.OrderId;
 import com.foodie.odo.core.valueobject.StreetAddress;
 import com.foodie.odo.core.valueobject.TrackingId;
@@ -12,14 +13,14 @@ import com.foodie.odo.core.valueobject.TrackingId;
 import java.util.List;
 
 public class Order extends AggregateRoot<OrderId> {
-    CustomerId customerId;
-    RestaurantId restaurantId;
-    StreetAddress address;
-    Money price;
-    List<OrderItem> items;
-    TrackingId trackingId;
-    OrderStatus orderStatus;
-    List<String> failureMessages;
+    private final CustomerId customerId;
+    private final RestaurantId restaurantId;
+    private final StreetAddress address;
+    private final Money price;
+    private final List<OrderItem> items;
+    private TrackingId trackingId;
+    private OrderStatus orderStatus;
+    private List<String> failureMessages;
 
     private Order(Builder builder) {
         super.setId(builder.id);
@@ -99,5 +100,78 @@ public class Order extends AggregateRoot<OrderId> {
         public Order build() {
             return new Order(this);
         }
+    }
+
+    public void validateOrder(Order order){
+        validateOrderStatus(order);
+        validateOrderPrice(order);
+        validateOrderItem(order);
+    }
+
+    private void validateOrderPrice(Order order) {
+        if(!order.price.isGreaterThanZero() && order.price==null){
+            throw new OrderDomainException("Order price canot be 0 or null");
+        }
+    }
+
+    private void validateOrderItem(Order order) {
+        Money subtotal = order.items.stream().map(orderItem -> {
+            orderItem.validateOrderItemPrice();
+            return orderItem.getSubtotal();
+        }).reduce(Money.ZERO,Money::add);
+
+        if(order.price!=subtotal){
+            throw new OrderDomainException("Order price doesn't match with items subtotal");
+        }
+    }
+
+    private void validateOrderStatus(Order order) {
+        if(order.orderStatus!= null && order.getId()!=null){
+            throw new OrderDomainException("Order is not in correct state before initialization");
+        }
+    }
+
+    public CustomerId getCustomerId() {
+        return customerId;
+    }
+
+    public RestaurantId getRestaurantId() {
+        return restaurantId;
+    }
+
+    public StreetAddress getAddress() {
+        return address;
+    }
+
+    public Money getPrice() {
+        return price;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public TrackingId getTrackingId() {
+        return trackingId;
+    }
+
+    public void setTrackingId(TrackingId trackingId) {
+        this.trackingId = trackingId;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public List<String> getFailureMessages() {
+        return failureMessages;
+    }
+
+    public void setFailureMessages(List<String> failureMessages) {
+        this.failureMessages = failureMessages;
     }
 }
