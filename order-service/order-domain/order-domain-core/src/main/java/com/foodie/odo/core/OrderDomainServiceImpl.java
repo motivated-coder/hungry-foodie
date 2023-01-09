@@ -3,6 +3,10 @@ package com.foodie.odo.core;
 import com.foodie.common.entity.Product;
 import com.foodie.odo.core.entity.Order;
 import com.foodie.odo.core.entity.Restaurant;
+import com.foodie.odo.core.event.OrderCreatedEvent;
+
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 public class OrderDomainServiceImpl implements OrderDomainService{
 
@@ -12,9 +16,11 @@ public class OrderDomainServiceImpl implements OrderDomainService{
         this.order = order;
     }
     @Override
-    public void preSaveOrderValidation(Order order, Restaurant restaurant) {
+    public OrderCreatedEvent preSaveOrderValidationAndInitialization(Order order, Restaurant restaurant) {
         order.validateOrder(order);
         setOrderItemProductInformation(order, restaurant);
+        order.initializeOrder();
+        return new OrderCreatedEvent(order, ZonedDateTime.now(ZoneId.of("UTC")));
     }
 
     private void setOrderItemProductInformation(Order order, Restaurant restaurant) {

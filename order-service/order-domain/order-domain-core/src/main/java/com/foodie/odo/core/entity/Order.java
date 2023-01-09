@@ -7,10 +7,12 @@ import com.foodie.common.valueobject.Money;
 import com.foodie.common.valueobject.RestaurantId;
 import com.foodie.odo.core.exception.OrderDomainException;
 import com.foodie.odo.core.valueobject.OrderId;
+import com.foodie.odo.core.valueobject.OrderItemId;
 import com.foodie.odo.core.valueobject.StreetAddress;
 import com.foodie.odo.core.valueobject.TrackingId;
 
 import java.util.List;
+import java.util.UUID;
 
 public class Order extends AggregateRoot<OrderId> {
     private final CustomerId customerId;
@@ -106,6 +108,20 @@ public class Order extends AggregateRoot<OrderId> {
         validateOrderStatus(order);
         validateOrderPrice(order);
         validateOrderItem(order);
+    }
+
+    public void initializeOrder(){
+        super.setId(new OrderId(UUID.randomUUID()));
+        trackingId = new TrackingId(UUID.randomUUID());
+        orderStatus=OrderStatus.PENDING;
+        initializeOrderItems();
+    }
+
+    private void initializeOrderItems() {
+        long itemId = 1;
+        for(OrderItem item: items){
+            item.initialize(super.getId(), new OrderItemId(itemId++));
+        }
     }
 
     private void validateOrderPrice(Order order) {

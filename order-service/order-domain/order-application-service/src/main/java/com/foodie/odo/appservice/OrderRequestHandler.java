@@ -2,6 +2,7 @@ package com.foodie.odo.appservice;
 
 import com.foodie.odo.appservice.exception.RestaurantNotFoundException;
 import com.foodie.odo.appservice.mapper.OrderMapper;
+import com.foodie.odo.appservice.ports.output.OrderRepository;
 import com.foodie.odo.appservice.ports.output.RestaurantRepository;
 import com.foodie.odo.core.OrderDomainService;
 import com.foodie.odo.core.entity.Customer;
@@ -10,6 +11,7 @@ import com.foodie.odo.appservice.dto.OrderDto;
 import com.foodie.odo.appservice.ports.output.CustomerRepository;
 import com.foodie.odo.core.entity.Order;
 import com.foodie.odo.core.entity.Restaurant;
+import com.foodie.odo.core.event.OrderCreatedEvent;
 
 import java.util.Objects;
 
@@ -17,12 +19,14 @@ public class OrderRequestHandler {
 
     private final CustomerRepository customerRepository;
     private final RestaurantRepository restaurantRepository;
+    private final OrderRepository orderRepository;
     private final OrderDomainService orderDomainService;
     private final OrderMapper orderMapper;
 
-    public OrderRequestHandler(CustomerRepository customerRepository, RestaurantRepository restaurantRepository, OrderDomainService orderDomainService, OrderMapper orderMapper) {
+    public OrderRequestHandler(CustomerRepository customerRepository, RestaurantRepository restaurantRepository, OrderRepository orderRepository, OrderDomainService orderDomainService, OrderMapper orderMapper) {
         this.customerRepository = customerRepository;
         this.restaurantRepository = restaurantRepository;
+        this.orderRepository = orderRepository;
         this.orderDomainService = orderDomainService;
         this.orderMapper = orderMapper;
     }
@@ -32,8 +36,12 @@ public class OrderRequestHandler {
         Restaurant restaurant = validateRestaurant(orderDto);
 
         Order order= orderMapper.orderDtoToOrder(orderDto);
-        orderDomainService.preSaveOrderValidation(order,restaurant);
+        OrderCreatedEvent orderCreatedEvent = orderDomainService.preSaveOrderValidationAndInitialization(order,restaurant);
+        saveOrder(order);
+    }
 
+    private void saveOrder(Order order) {
+        orderRepository.saveOrder(order);
     }
 
     private Restaurant validateRestaurant(OrderDto orderDto) {
