@@ -4,10 +4,16 @@ import com.foodie.common.entity.Product;
 import com.foodie.odo.core.entity.Order;
 import com.foodie.odo.core.entity.Restaurant;
 import com.foodie.odo.core.event.OrderCreatedEvent;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.logging.Logger;
 
+
+@Slf4j
+@Component
 public class OrderDomainServiceImpl implements OrderDomainService{
 
     private final Order order;
@@ -18,8 +24,11 @@ public class OrderDomainServiceImpl implements OrderDomainService{
     @Override
     public OrderCreatedEvent preSaveOrderValidationAndInitialization(Order order, Restaurant restaurant) {
         order.validateOrder(order);
+        log.info("Order validated successfully");
+        log.info("setting orderItem product information");
         setOrderItemProductInformation(order, restaurant);
         order.initializeOrder();
+        log.info("Order successfully initialized with OrderId {}",order.getId());
         return new OrderCreatedEvent(order, ZonedDateTime.now(ZoneId.of("UTC")));
     }
 

@@ -16,12 +16,4 @@
         <module>order-application-service</module>
     </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.foodie</groupId>
-            <artifactId>common-domain</artifactId>
-        </dependency>
-    </dependencies>
-
-
 </project>
