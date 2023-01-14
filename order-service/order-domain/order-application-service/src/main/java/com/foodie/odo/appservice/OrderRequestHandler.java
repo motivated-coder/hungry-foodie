@@ -17,10 +17,15 @@ import com.foodie.odo.core.entity.Restaurant;
 import com.foodie.odo.core.event.OrderCreatedEvent;
 import com.foodie.odo.core.exception.OrderDomainException;
 import com.foodie.odo.core.exception.OrderNotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
 
+@Component
+@Slf4j
 public class OrderRequestHandler {
 
     private final CustomerRepository customerRepository;
@@ -39,14 +44,15 @@ public class OrderRequestHandler {
         this.orderCreatedPaymentRequestMessagePublisher = orderCreatedPaymentRequestMessagePublisher;
     }
 
-    public Order preSaveValidation(OrderDto orderDto){
+    @Transactional
+    public Order validateAndSave(OrderDto orderDto){
         validateCustomer(orderDto);
         Restaurant restaurant = validateRestaurant(orderDto);
-
         Order order= orderMapper.orderDtoToOrder(orderDto);
         OrderCreatedEvent orderCreatedEvent = orderDomainService.preSaveOrderValidationAndInitialization(order,restaurant);
+        log.info("Order with ID {} is being saved",order.getId());
         saveOrder(order);
-        //TODO : Add logger that order is saved
+        log.info("Order successfully saved, creating OrderCreatedEvent and publishing it");
         orderCreatedPaymentRequestMessagePublisher.publish(orderCreatedEvent);
         return order;
     }
@@ -56,6 +62,7 @@ public class OrderRequestHandler {
     }
 
     private Restaurant validateRestaurant(OrderDto orderDto) {
+        log.info("Validating restaurant with id {}",orderDto.getRestaurantId());
         Restaurant restaurant = restaurantRepository.getRestaurantById(orderDto.getRestaurantId()).get();
         if(Objects.isNull(restaurant)){
             throw new RestaurantNotFoundException("Restaurant doesn't exist for restaurant id "+orderDto.getRestaurantId());
@@ -69,17 +76,21 @@ public class OrderRequestHandler {
     }
 
     private Customer validateCustomer(OrderDto orderDto){
+        log.info("Validating customer with id {}",orderDto.getCustomerId());
         Customer customer = customerRepository.getCustomerById(orderDto.getCustomerId()).get();
         if(Objects.isNull(customer)){
+            log.error("Customer not found with customer id {}", orderDto.getCustomerId());
             throw new CustomerNotFoundException("Customer doesn't exist for id "+orderDto.getCustomerId());
         }
         return customer;
     }
 
+    @Transactional(readOnly = true)
     public TrackOrderResponse track(TrackingOrderQuery trackingOrderQuery) {
+        log.info("Fetching order with tracking id {}",trackingOrderQuery.getTrackingId());
         Optional<Order> order = orderRepository.findByTrackingID(trackingOrderQuery.getTrackingId());
         if(order.isEmpty()){
-            //TODO:  add logger
+            log.error("No order is found with tracking id ",trackingOrderQuery.getTrackingId());
             throw new OrderNotFoundException("Order not found for tracking ID "+trackingOrderQuery.getTrackingId());
         }
         return orderMapper.orderToTrackOrderResponse(order);

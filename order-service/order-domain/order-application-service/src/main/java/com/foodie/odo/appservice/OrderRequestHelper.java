@@ -7,9 +7,11 @@ import com.foodie.odo.appservice.dto.TrackingOrderQuery;
 import com.foodie.odo.appservice.mapper.OrderMapper;
 import com.foodie.odo.core.OrderDomainService;
 import com.foodie.odo.core.entity.Order;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class OrderRequestHelper {
 
     private final OrderMapper orderMapper;
@@ -21,7 +23,8 @@ public class OrderRequestHelper {
     }
 
     public OrderDtoResponse persist(OrderDto orderDto) {
-        Order order = orderRequestHandler.preSaveValidation(orderDto);
+        log.info("Validating order before creation");
+        Order order = orderRequestHandler.validateAndSave(orderDto);
         return orderMapper.orderToOrderDtoResponse(order);
     }
 

@@ -13,12 +13,14 @@ import com.foodie.odo.core.valueobject.OrderId;
 import com.foodie.odo.core.valueobject.OrderItemId;
 import com.foodie.odo.core.valueobject.StreetAddress;
 import com.foodie.odo.core.valueobject.TrackingId;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+@Component
 public class OrderMapper {
     public Order orderDtoToOrder(OrderDto orderDto){
         return Order.builder()
