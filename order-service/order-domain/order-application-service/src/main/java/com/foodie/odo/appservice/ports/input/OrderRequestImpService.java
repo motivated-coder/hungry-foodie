@@ -23,6 +23,6 @@ public class OrderRequestImpService implements OrderRequest{
 
     @Override
     public TrackOrderResponse trackOrder(TrackingOrderQuery trackingOrderQuery) {
-        return null;
+        return orderRequestHelper.track(trackingOrderQuery);
     }
 }

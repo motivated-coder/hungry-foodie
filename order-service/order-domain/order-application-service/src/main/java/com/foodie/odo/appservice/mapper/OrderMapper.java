@@ -6,9 +6,7 @@ import com.foodie.common.valueobject.CustomerId;
 import com.foodie.common.valueobject.Money;
 import com.foodie.common.valueobject.ProductId;
 import com.foodie.common.valueobject.RestaurantId;
-import com.foodie.odo.appservice.dto.Item;
-import com.foodie.odo.appservice.dto.OrderAddress;
-import com.foodie.odo.appservice.dto.OrderDto;
+import com.foodie.odo.appservice.dto.*;
 import com.foodie.odo.core.entity.Order;
 import com.foodie.odo.core.entity.OrderItem;
 import com.foodie.odo.core.valueobject.OrderId;
@@ -17,6 +15,7 @@ import com.foodie.odo.core.valueobject.StreetAddress;
 import com.foodie.odo.core.valueobject.TrackingId;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -46,5 +45,21 @@ public class OrderMapper {
     private StreetAddress orderAddressToStreetAddress(OrderAddress address) {
         return new StreetAddress(UUID.randomUUID(),
                 address.getStreet(),address.getPostalCode(), address.getCity());
+    }
+
+    public OrderDtoResponse orderToOrderDtoResponse(Order order){
+        return OrderDtoResponse.builder()
+                .orderStatus(order.getOrderStatus())
+                .trackingId(order.getTrackingId().getT())
+                .message("Order created successfully")
+                .build();
+    }
+
+    public TrackOrderResponse orderToTrackOrderResponse(Optional<Order> order) {
+        return TrackOrderResponse.builder()
+                .orderStatus(order.get().getOrderStatus())
+                .trackingId(order.get().getTrackingId().getT())
+                .failureMessages(order.get().getFailureMessages())
+                .build();
     }
 }

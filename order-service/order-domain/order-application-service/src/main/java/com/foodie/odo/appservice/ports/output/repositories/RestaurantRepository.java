@@ -1,4 +1,4 @@
-package com.foodie.odo.appservice.ports.output;
+package com.foodie.odo.appservice.ports.output.repositories;
 
 import com.foodie.common.valueobject.RestaurantId;
 import com.foodie.odo.core.entity.Restaurant;

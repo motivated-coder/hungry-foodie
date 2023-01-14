@@ -9,6 +9,10 @@ public class BaseId<T> {
         this.t = t;
     }
 
+    public T getT() {
+        return t;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
