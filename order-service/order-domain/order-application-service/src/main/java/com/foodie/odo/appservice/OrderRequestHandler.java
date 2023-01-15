@@ -1,5 +1,6 @@
 package com.foodie.odo.appservice;
 
+import com.foodie.common.valueobject.CustomerId;
 import com.foodie.odo.appservice.dto.TrackOrderResponse;
 import com.foodie.odo.appservice.dto.TrackingOrderQuery;
 import com.foodie.odo.appservice.exception.RestaurantNotFoundException;
@@ -77,7 +78,7 @@ public class OrderRequestHandler {
 
     private Customer validateCustomer(OrderDto orderDto){
         log.info("Validating customer with id {}",orderDto.getCustomerId());
-        Customer customer = customerRepository.getCustomerById(orderDto.getCustomerId()).get();
+        Customer customer = customerRepository.getCustomerById(new CustomerId(orderDto.getCustomerId())).get();
         if(Objects.isNull(customer)){
             log.error("Customer not found with customer id {}", orderDto.getCustomerId());
             throw new CustomerNotFoundException("Customer doesn't exist for id "+orderDto.getCustomerId());

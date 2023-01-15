@@ -1,6 +1,5 @@
 package com.foodie.odo.appservice.ports.output.repositories;
 
-import com.foodie.odo.core.event.OrderCreatedEvent;
 import com.foodie.odo.core.entity.Order;
 
 import java.util.Optional;

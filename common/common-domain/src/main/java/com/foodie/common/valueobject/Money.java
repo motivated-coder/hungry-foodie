@@ -17,4 +17,8 @@ public class Money {
     public Money add(Money money) {
         return new Money(this.price.add(money.price));
     }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
 }
