@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
@@ -16,7 +17,7 @@ import java.math.BigDecimal;
 @Data
 public class ProductEntity {
     @Id
-    Integer id;
+    UUID id;
     String name;
     BigDecimal price;
 }
