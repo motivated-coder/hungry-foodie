@@ -6,6 +6,7 @@ import org.apache.avro.specific.SpecificRecordBase;
 import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
+import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
@@ -13,6 +14,7 @@ import javax.annotation.PreDestroy;
 import java.io.Serializable;
 
 @Slf4j
+@Component
 public class KafkaProducerImpl<K extends Serializable, V extends SpecificRecordBase> implements KafkaProducer<K,V>{
 
     private final KafkaTemplate<K,V> kafkaTemplate;
