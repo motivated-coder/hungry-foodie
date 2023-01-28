@@ -5,21 +5,20 @@ import com.foodie.odo.core.entity.Order;
 import com.foodie.odo.core.entity.Restaurant;
 import com.foodie.odo.core.event.OrderCreatedEvent;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 
 @Slf4j
-@Component
 public class OrderDomainServiceImpl implements OrderDomainService{
 
-    private final Order order;
+//    private final Order order;
 
-    public OrderDomainServiceImpl(Order order) {
-        this.order = order;
-    }
+//    public OrderDomainServiceImpl(){}
+//    public OrderDomainServiceImpl(Order order) {
+//        this.order = order;
+//    }
     @Override
     public OrderCreatedEvent preSaveOrderValidationAndInitialization(Order order, Restaurant restaurant) {
         order.validateOrder(order);
