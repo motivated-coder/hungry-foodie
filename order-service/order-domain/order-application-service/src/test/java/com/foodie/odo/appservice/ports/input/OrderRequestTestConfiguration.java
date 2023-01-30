@@ -8,11 +8,13 @@ import com.foodie.odo.appservice.ports.output.repositories.CustomerRepository;
 import com.foodie.odo.appservice.ports.output.repositories.OrderRepository;
 import com.foodie.odo.appservice.ports.output.repositories.RestaurantRepository;
 import com.foodie.odo.core.OrderDomainService;
+import com.foodie.odo.core.OrderDomainServiceImpl;
 import org.mockito.Mockito;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+@SpringBootApplication(scanBasePackages = {"com.foodie"})
 public class OrderRequestTestConfiguration {
 
     @Bean
@@ -21,23 +23,13 @@ public class OrderRequestTestConfiguration {
     }
 
     @Bean
-    public OrderRequestHandler getOrderRequestHandler(){
-        return Mockito.mock(OrderRequestHandler.class);
-    }
-
-    @Bean
-    public OrderMapper getOrderMapper(){
-        return Mockito.mock(OrderMapper.class);
+    public OrderRepository getOrderRepository(){
+        return Mockito.mock(OrderRepository.class);
     }
 
     @Bean
     public OrderDomainService getOrderDomainService(){
-        return Mockito.mock(OrderDomainService.class);
-    }
-
-    @Bean
-    public OrderRepository getOrderRepository(){
-        return Mockito.mock(OrderRepository.class);
+        return new OrderDomainServiceImpl();
     }
 
     @Bean
@@ -54,4 +46,19 @@ public class OrderRequestTestConfiguration {
     public OrderCreatedPaymentRequestMessagePublisher getOrderCreatedPaymentRequestMessagePublisher(){
         return Mockito.mock(OrderCreatedPaymentRequestMessagePublisher.class);
     }
+
+    @Bean
+    public OrderRequestHandler getOrderRequestHandler(){
+        return Mockito.mock(OrderRequestHandler.class);
+    }
+
+    @Bean
+    public OrderMapper getOrderMapper(){
+        return Mockito.mock(OrderMapper.class);
+    }
+
+//    @Bean
+//    public OrderRequest getOrderRequest(){
+//        return Mockito.mock(OrderRequest.class);
+//    }
 }

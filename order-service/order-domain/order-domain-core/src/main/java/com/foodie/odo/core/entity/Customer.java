@@ -5,6 +5,7 @@ import com.foodie.common.valueobject.CustomerId;
 
 public class Customer extends AggregateRoot<CustomerId> {
 
+    public Customer(){}
     private Customer(Builder builder) {
         super.setId(builder.id);
     }

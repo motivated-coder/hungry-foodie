@@ -5,9 +5,10 @@ import com.foodie.odo.appservice.dto.OrderDto;
 import com.foodie.odo.appservice.dto.OrderDtoResponse;
 import com.foodie.odo.appservice.dto.TrackOrderResponse;
 import com.foodie.odo.appservice.dto.TrackingOrderQuery;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-@Service
+@Component(value = "orderRequestImpService")
 public class OrderRequestImpService implements OrderRequest{
 
     OrderRequestHelper orderRequestHelper;
