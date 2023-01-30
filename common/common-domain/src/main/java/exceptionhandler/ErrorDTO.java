@@ -1,4 +1,4 @@
-package com.foodie.ca.exception.handler;
+package exceptionhandler;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

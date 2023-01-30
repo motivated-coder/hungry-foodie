@@ -1,7 +1,7 @@
 package com.foodie.os.orderapplication.rest.controller.exception;
 
-import com.foodie.ca.exception.handler.ErrorDTO;
-import com.foodie.ca.exception.handler.GlobalExceptionHandler;
+import exceptionhandler.ErrorDTO;
+import exceptionhandler.GlobalExceptionHandler;
 import com.foodie.odo.core.exception.OrderDomainException;
 import com.foodie.odo.core.exception.OrderNotFoundException;
 import lombok.extern.slf4j.Slf4j;
